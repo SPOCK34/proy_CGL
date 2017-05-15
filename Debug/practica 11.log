@@ -1,0 +1,26 @@
+﻿  pra_11.cpp
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\pra_11.cpp(105): warning C4838: la conversión de 'double' en 'GLfloat' requiere una conversión de restricción
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\pra_11.cpp(106): warning C4838: la conversión de 'double' en 'GLfloat' requiere una conversión de restricción
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\pra_11.cpp(107): warning C4838: la conversión de 'double' en 'GLfloat' requiere una conversión de restricción
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\pra_11.cpp(110): warning C4838: la conversión de 'double' en 'GLfloat' requiere una conversión de restricción
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\pra_11.cpp(111): warning C4838: la conversión de 'double' en 'GLfloat' requiere una conversión de restricción
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\pra_11.cpp(112): warning C4838: la conversión de 'double' en 'GLfloat' requiere una conversión de restricción
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\pra_11.cpp(115): warning C4838: la conversión de 'double' en 'GLfloat' requiere una conversión de restricción
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\pra_11.cpp(116): warning C4838: la conversión de 'double' en 'GLfloat' requiere una conversión de restricción
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\pra_11.cpp(117): warning C4838: la conversión de 'double' en 'GLfloat' requiere una conversión de restricción
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\pra_11.cpp(118): warning C4838: la conversión de 'double' en 'GLfloat' requiere una conversión de restricción
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\pra_11.cpp(166): warning C4838: la conversión de 'double' en 'GLfloat' requiere una conversión de restricción
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\pra_11.cpp(298): warning C4838: la conversión de 'double' en 'GLfloat' requiere una conversión de restricción
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\pra_11.cpp(414): warning C4838: la conversión de 'double' en 'GLfloat' requiere una conversión de restricción
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\pra_11.cpp(660): warning C4838: la conversión de 'int' en 'GLfloat' requiere una conversión de restricción
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\pra_11.cpp(944): warning C4838: la conversión de 'double' en 'GLfloat' requiere una conversión de restricción
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\pra_11.cpp(1039): warning C4838: la conversión de 'double' en 'GLfloat' requiere una conversión de restricción
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\pra_11.cpp(1109): warning C4838: la conversión de 'double' en 'GLfloat' requiere una conversión de restricción
+  figuras.cpp
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\figuras.cpp(22): warning C4838: la conversión de 'double' en 'GLfloat' requiere una conversión de restricción
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\figuras.cpp(99): warning C4838: la conversión de 'double' en 'GLfloat' requiere una conversión de restricción
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\figuras.cpp(319): warning C4101: 'theta': variable local sin referencia
+c:\users\usuario\documents\visual studio 2015\projects\practica 11\practica 11\figuras.cpp(319): warning C4101: 'phi': variable local sin referencia
+  Generando código...
+  practica 11.vcxproj -> C:\Users\Usuario\Documents\Visual Studio 2015\Projects\practica 11\Debug\practica 11.exe
+  practica 11.vcxproj -> C:\Users\Usuario\Documents\Visual Studio 2015\Projects\practica 11\Debug\practica 11.pdb (Full PDB)

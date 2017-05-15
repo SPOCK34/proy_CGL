@@ -1446,8 +1446,8 @@ void display(void)   // Creamos la funcion donde se dibuja
 		glPushMatrix();
 			glPushMatrix(); //Creamos cielo
 				glDisable(GL_LIGHTING);
-				glTranslatef(0, 50, 0);
-				fig1.skybox( text1.GLindex, text1.GLindex, text1.GLindex, text1.GLindex, text1.GLindex, text1.GLindex);
+				glTranslatef(0, 12.5, 0);
+				fig1.skybox( text1.GLindex, t_pared.GLindex, t_pared2.GLindex, t_pared3.GLindex, text1.GLindex, text1.GLindex);
 				glEnable(GL_LIGHTING);
 			glPopMatrix();
 
