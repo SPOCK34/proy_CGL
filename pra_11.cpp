@@ -28,7 +28,7 @@ float movBrazoIzq = 0.0;
 float movBrazoIzq2 = 0.0;
 
 float rotMusDer = 0, rotRodDer = 0;
-float rota=0;
+
 #define MAX_FRAMES 9
 int i_max_steps = 90;
 int i_curr_steps = 0;
@@ -87,7 +87,7 @@ int font = (int)GLUT_BITMAP_HELVETICA_18;
 //GLfloat Diffuse[]= { 1.0f, 1.0f, 1.0f, 1.0f };				// Diffuse Light Values
 GLfloat Diffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f };				// Diffuse Light Values
 GLfloat Specular[] = { 1.0, 1.0, 1.0, 1.0 };				// Specular Light Values
-GLfloat Position[] = { 0.0f, 18.0f, 0.0f, 0.0f };			// Light Position
+GLfloat Position[] = { 0.0f, 7.0f, -5.0f, 0.0f };			// Light Position
 GLfloat Position2[] = { 0.0f, 0.0f, -5.0f, 1.0f };			// Light Position
 
 GLfloat m_dif1[] = { 0.0f, 0.2f, 1.0f, 1.0f };				// Diffuse Light Values
@@ -110,54 +110,132 @@ GLfloat mat_diffuse4[] = { 1.0, 1.0, 0.0, 1.0 }; //canica  gelb
 GLfloat mat_diffuse5[] = { 0.4, 0.0, 0.4, 1.0 }; //canica  violeta
 GLfloat mat_diffuse6[] = { 1.0, 0.2, 0.0, 1.0 }; //canica  orange
 GLfloat mat_diffuse7[] = { 0.0, 0.4, 0.0, 1.0 }; //canica  grun  2
-GLfloat mat_diffuseLampara[] = { 0.4, 0.1, 0.0, 1.0 }; //luz lampara haup
-GLfloat ambiente[] = { 1.0,1.0,1,0 ,1.0};
-
-GLfloat mat_am_silla3[] = { 0.0215,0.1745,	0.0215 };
-GLfloat mat_di_silla3[] = { 0.0215,	0.1745,	0.0215 };
-GLfloat mat_espec_silla3[] = { 0.0215,	0.1745,	0.0215 };
-GLfloat mat_shininess[] = { 0.6 };
-CFiguras fig1;
-
-CModel pez1;
-CModel lampe1;
-CModel robot;
-CModel lampeHaup;
 
 CTexture text1;
 CTexture text2;
-CTexture t_silla1;
-CTexture t_silla2;
-CTexture t_estante;
-CTexture t_asiento;
-CTexture t_asiento2;
+CTexture text3;	//Flecha
+CTexture text4;	//Pavimento
+CTexture text5;	//Pasto01
+CTexture text6;	//Casa01
+CTexture agua;
+CTexture mosaico;
+CTexture tree;
 CTexture tex_mesa, tex_mesa1, tex_mesa2;
-CTexture t_dodeca;
-//textura Spiele
-CTexture t_octa;
-
-CTexture t_piso;
-CTexture t_pared1;
-CTexture t_pared;
-CTexture t_pared2;
-CTexture t_pared3;
-CTexture t_techo;
-CTexture t_fachada;
-CTexture t_puerta;
-CTexture t_ventana;
-CTexture t_poster1;
-CTexture t_poster2;
-CTexture t_poster3;
-
-CTexture t_jenga1;
-CTexture t_jenga2;
-CTexture t_monopoly1;
-CTexture t_monopoly2;
-CTexture t_scrabble1;
-CTexture t_scrabble2;
 
 
-void cuboMesa(GLuint textura)
+CFiguras fig1;
+CFiguras fig2;
+CFiguras fig3;
+CFiguras fig4;	//Pasto01
+CFiguras fig5;	//Casa01
+CFiguras fig6;
+CFiguras fig7;	//Para crear Monito
+
+				//Figuras de 3D Studio
+CModel kit;
+CModel llanta;
+CModel astro;
+CModel orca;
+
+//Animación del coche
+float angRot = 0.0;
+float movKitX = 0.0;
+float movKitZ = 0.0;
+float rotKit = 0.0;
+float rotTires = 0.0;
+bool g_fanimacion = false;
+bool g_avanza = false;
+
+bool circuito = false;
+bool recorrido1 = true;
+bool recorrido2 = false;
+bool recorrido3 = false;
+bool recorrido4 = false;
+bool recorrido5 = false;
+
+int timer = 0;
+//ANIMATION ORCA
+
+float pez_der = 0.0;
+float pez_izq = 0.0;
+float pos_pez = 0.0;
+float rota = 0.0;
+
+
+void prisma2(GLuint text, GLuint text2)  //Funcion creacion prisma
+{
+
+	GLfloat vertice[8][3] = {
+		{ 0.5 ,-0.5, 0.5 },    //Coordenadas Vértice 0 V0
+		{ -0.5 ,-0.5, 0.5 },    //Coordenadas Vértice 1 V1
+		{ -0.5 ,-0.5, -0.5 },    //Coordenadas Vértice 2 V2
+		{ 0.5 ,-0.5, -0.5 },    //Coordenadas Vértice 3 V3
+		{ 0.5 ,0.5, 0.5 },    //Coordenadas Vértice 4 V4
+		{ 0.5 ,0.5, -0.5 },    //Coordenadas Vértice 5 V5
+		{ -0.5 ,0.5, -0.5 },    //Coordenadas Vértice 6 V6
+		{ -0.5 ,0.5, 0.5 },    //Coordenadas Vértice 7 V7
+	};
+
+
+	glBindTexture(GL_TEXTURE_2D, text2);   // choose the texture to use.
+										   //glBindTexture(GL_TEXTURE_2D, texture[filter]);   // choose the texture to use.
+	glBegin(GL_POLYGON);	//Front
+							//glColor3f(0.0,0.0,1.0);
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[0]);
+	glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[4]);
+	glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[7]);
+	glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[1]);
+	glEnd();
+
+	glBegin(GL_POLYGON);	//Right
+							//glColor3f(0.0,0.0,1.0);
+	glNormal3f(1.0f, 0.0f, 0.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[0]);
+	glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[3]);
+	glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[5]);
+	glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[4]);
+	glEnd();
+
+	glBegin(GL_POLYGON);	//Back
+							//glColor3f(0.0,1.0,0.0);
+	glNormal3f(0.0f, 0.0f, -1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[6]);
+	glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[5]);
+	glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[3]);
+	glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[2]);
+	glEnd();
+
+	glBegin(GL_POLYGON);  //Left
+						  //glColor3f(1.0,1.0,1.0);
+	glNormal3f(-1.0f, 0.0f, 0.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[1]);
+	glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[7]);
+	glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[6]);
+	glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[2]);
+	glEnd();
+
+	glBegin(GL_POLYGON);  //Bottom
+						  //glColor3f(0.4,0.2,0.6);
+	glNormal3f(0.0f, -1.0f, 0.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3fv(vertice[0]);
+	glTexCoord2f(1.0f, 0.0f); glVertex3fv(vertice[1]);
+	glTexCoord2f(1.0f, 1.0f); glVertex3fv(vertice[2]);
+	glTexCoord2f(0.0f, 1.0f); glVertex3fv(vertice[3]);
+	glEnd();
+
+	glBindTexture(GL_TEXTURE_2D, text);   // choose the texture to use.
+	glBegin(GL_POLYGON);  //Top
+						  //glColor3f(0.8,0.2,0.4);
+	glNormal3f(0.0f, 1.0f, 0.0f);
+	glTexCoord2f(pez_der + 1.0f, 0.0f); glVertex3fv(vertice[4]);
+	glTexCoord2f(pez_der + 1.0f, 1.0f); glVertex3fv(vertice[5]);
+	glTexCoord2f(pez_izq, 1.0f); glVertex3fv(vertice[6]);
+	glTexCoord2f(pez_izq, 0.0f); glVertex3fv(vertice[7]);
+	glEnd();
+}
+
+void cubo(GLuint textura)
 {
 	GLfloat vertice[8][3] = {
 		{ 0.5,-0.5,0.5 },//0
@@ -276,203 +354,81 @@ void cubo2(GLuint textura)
 	glEnd();
 
 }
-void dodecaedro(GLuint textura1)
+void ciudad()
 {
-	GLfloat vertice[20][3] = {
-		{ 0.0,0.0,0.0 }, //coordenada vertice0
-		{ -2.3,0.0,-1.5 },//Coordenada vertice1
-		{ -1.5,0.0,-4.0 },//Coordenada vertice2
-		{ 1.5,0.0,-4.0 },//Coordenada vertice3
-		{ 2.3,0.0,-1.5 }, //coordenada vertice4
 
-		{ 0.0,2.5,1.5 },//Coordenada vertice5
-		{ -3.9,2.5,-1.15 },//Coordenada vertice6
-		{ -2.5,2.5,-5.15 },//Coordenada vertice7
-		{ 2.5,2.5,-5.15 }, //coordenada vertice8
-		{ 3.9,2.5,-1.15 },//Coordenada vertice9
-		{ -2.15,4.0,0.7 },//Coordenada vertice10
-		{ -3.5,4.0,-3.15 },//Coordenada vertice11
-		{ 0.0,4.0,-5.75 },//Coordenada vertice12
-		{ 3.5,4.0,-3.15 }, //coordenada vertice13
-		{ 2.15,4.0,0.7 },//Coordenada vertice14
-		{ -1.5,6.5,0.0 },//Coordenada vertice15
-		{ -2.3,6.5,-2.5 },//Coordenada vertice16
-		{ 0.0,6.5,-4.0 },//Coordenada vertice17
-		{ 2.3,6.6,-2.5 }, //coordenada vertice18
-		{ 1.5,6.5,0.0 },//Coordenada vertice19
+	glPushMatrix(); //Camino1
+	glTranslatef(20.5, 0.0, 0.0);
+	glScalef(46, 0.1, 7);
+	glDisable(GL_LIGHTING);
+	fig3.prisma2(text4.GLindex, 0);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
 
-	};
-	glBindTexture(GL_TEXTURE_2D, textura1);
-	//	glEnable(GL_DEPTH_TEST);//--------------------------CAMBIO
+	glPushMatrix(); //Camino2
+	glTranslatef(-23.5, 0.0, 0.0);
+	glScalef(40, 0.1, 7);
+	glDisable(GL_LIGHTING);
+	fig3.prisma2(text4.GLindex, 0);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
 
-	glBegin(GL_POLYGON);	//numero1
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.2656f, 0.24218f); glVertex3fv(vertice[0]);//punta
-	glTexCoord2f(0.1640f, 0.3710f); glVertex3fv(vertice[1]);//iaba
-	glTexCoord2f(0.1992f, 0.6093f); glVertex3fv(vertice[2]);//iarr
-	glTexCoord2f(0.3203f, 0.6093f); glVertex3fv(vertice[3]);//darr
-	glTexCoord2f(0.3632f, 0.3828f); glVertex3fv(vertice[4]);//daba
-	glEnd();
-	//glDisable(GL_DEPTH_TEST);//---------------------------------------CAMBIO
+	glPushMatrix(); //Camino3  lateral derecho
+	glTranslatef(47, 0.0, -19);
+	glRotatef(90, 0, 1, 0);
+	//glScalef(40,0.1,7);
+	glScalef(45, 0.1, 7);
+	glDisable(GL_LIGHTING);
+	fig3.prisma2(text4.GLindex, 0);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
 
-	glBegin(GL_POLYGON);	//numero2
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.1640f, 0.3710f); glVertex3fv(vertice[0]);
-	glTexCoord2f(0.2656f, 0.2382f); glVertex3fv(vertice[4]);
-	glTexCoord2f(0.2265f, 0.0117f); glVertex3fv(vertice[9]);
-	glTexCoord2f(0.1054f, 0.0117f); glVertex3fv(vertice[14]);
-	glTexCoord2f(0.0664f, 0.2304f); glVertex3fv(vertice[5]);
-	glEnd();
-	glBegin(GL_POLYGON);	//numero3
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.1015f, 0.7343f); glVertex3fv(vertice[4]);
-	glTexCoord2f(0.1992f, 0.6093f); glVertex3fv(vertice[3]);
-	glTexCoord2f(0.1640f, 0.3710f); glVertex3fv(vertice[8]);
-	glTexCoord2f(0.0429f, 0.3710f); glVertex3fv(vertice[13]);
-	glTexCoord2f(0.0f, 0.5976f); glVertex3fv(vertice[9]);
-	glEnd();
-	glBegin(GL_POLYGON);	//numero4
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.2617f, 0.9726f); glVertex3fv(vertice[2]);
-	glTexCoord2f(0.3554f, 0.8398f); glVertex3fv(vertice[7]);
-	glTexCoord2f(0.3203f, 0.6093f); glVertex3fv(vertice[12]);
-	glTexCoord2f(0.2031f, 0.6093f); glVertex3fv(vertice[8]);
-	glTexCoord2f(0.1640f, 0.8281f); glVertex3fv(vertice[3]);
-	glEnd();
-	glBegin(GL_POLYGON);	//numero5
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.4257f, 0.7460f); glVertex3fv(vertice[1]);
-	glTexCoord2f(0.5195f, 0.6093f); glVertex3fv(vertice[6]);
-	glTexCoord2f(0.4804f, 0.3867f); glVertex3fv(vertice[11]);
-	glTexCoord2f(0.3632f, 0.3867f); glVertex3fv(vertice[7]);
-	glTexCoord2f(0.3203f, 0.6093f); glVertex3fv(vertice[2]);
-	glEnd();
-	glBegin(GL_POLYGON);	//numero6
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.3632f, 0.375f); glVertex3fv(vertice[0]);
-	glTexCoord2f(0.4609f, 0.2382f); glVertex3fv(vertice[5]);
-	glTexCoord2f(0.4218f, 0.0117f); glVertex3fv(vertice[10]);
-	glTexCoord2f(0.3007f, 0.0117f); glVertex3fv(vertice[6]);
-	glTexCoord2f(0.2656f, 0.2382f); glVertex3fv(vertice[1]);
-	glEnd();
-	glBegin(GL_POLYGON);	//numero7
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.7382f, 0.7578f); glVertex3fv(vertice[15]);
-	glTexCoord2f(0.8359f, 0.6289f); glVertex3fv(vertice[16]);
-	glTexCoord2f(0.8007f, 0.3945f); glVertex3fv(vertice[17]);
-	glTexCoord2f(0.6796f, 0.3945f); glVertex3fv(vertice[18]);
-	glTexCoord2f(0.6404f, 0.6132f); glVertex3fv(vertice[19]);
-	glEnd();
-	glBegin(GL_POLYGON); //numero9
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.6406f, 0.6210f); glVertex3fv(vertice[10]);
-	glTexCoord2f(0.5429f, 0.7578f); glVertex3fv(vertice[5]);
-	glTexCoord2f(0.5859f, 0.9804f); glVertex3fv(vertice[14]);
-	glTexCoord2f(0.6992f, 0.9804f); glVertex3fv(vertice[19]);
-	glTexCoord2f(0.7382f, 0.7617f); glVertex3fv(vertice[15]);
-	glEnd();
+	glPushMatrix(); //Camino4  fondo derecho
+	glTranslatef(21.75, 0.0, -38);
+	//glScalef(40,0.1,7);
+	glScalef(43.5, 0.1, 7);
+	glDisable(GL_LIGHTING);
+	fig3.prisma2(text4.GLindex, 0);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
 
-	glBegin(GL_POLYGON);//numero8
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.5820f, 0.2460f); glVertex3fv(vertice[14]);
-	glTexCoord2f(0.4882f, 0.3789f); glVertex3fv(vertice[9]);
-	glTexCoord2f(0.5195f, 0.6132f); glVertex3fv(vertice[13]);
-	glTexCoord2f(0.6406f, 0.6132f); glVertex3fv(vertice[18]);
-	glTexCoord2f(0.6757f, 0.3867f); glVertex3fv(vertice[19]);
-	glEnd();
+	glPushMatrix(); //Camino5  fondo izquierdo
+	glTranslatef(-21.75, 0.0, -38);
+	//glScalef(40,0.1,7);
+	glScalef(43.5, 0.1, 7);
+	glDisable(GL_LIGHTING);
+	fig3.prisma2(text4.GLindex, 0);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
 
-	glBegin(GL_POLYGON);//12
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.7421f, 0.0195f); glVertex3fv(vertice[12]);
-	glTexCoord2f(0.6445f, 0.1640f); glVertex3fv(vertice[17]);
-	glTexCoord2f(0.6796f, 0.3945f); glVertex3fv(vertice[18]);
-	glTexCoord2f(0.8007f, 0.3945f); glVertex3fv(vertice[13]);
-	glTexCoord2f(0.8398f, 0.1679f); glVertex3fv(vertice[8]);
-	glEnd();
-	glBegin(GL_POLYGON);//numero11
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.9023f, 0.2578f); glVertex3fv(vertice[12]);
-	glTexCoord2f(0.8007f, 0.3945f); glVertex3fv(vertice[7]);
-	glTexCoord2f(0.8398f, 0.6210f); glVertex3fv(vertice[11]);
-	glTexCoord2f(0.9570f, 0.6210f); glVertex3fv(vertice[16]);
-	glTexCoord2f(1.0f, 0.3906f); glVertex3fv(vertice[17]);
-	glEnd();
-	glBegin(GL_POLYGON);//numero10
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.8399f, 0.6289f); glVertex3fv(vertice[11]);
-	glTexCoord2f(0.7382f, 0.7617f); glVertex3fv(vertice[6]);
-	glTexCoord2f(0.7812f, 0.9882f); glVertex3fv(vertice[10]);
-	glTexCoord2f(0.8984f, 0.9882f); glVertex3fv(vertice[15]);
-	glTexCoord2f(0.9335f, 0.7617f); glVertex3fv(vertice[16]);
-	glEnd();
-}
-void juego_mesa(float ancho, float largo, float alto, GLuint textura_1, GLuint textura_2)
-{
-	GLfloat vertice[8][3] = {
-		{ 0.5*largo ,-0.5*alto ,0.5*ancho },
-		{ 0.5*largo ,0.5*alto ,0.5*ancho },
-		{ -0.5*largo ,0.5*alto ,0.5*ancho },
-		{ -0.5*largo ,-0.5*alto ,0.5*ancho },
-		{ 0.5*largo ,-0.5*alto ,-0.5*ancho },
-		{ 0.5*largo ,0.5*alto ,-0.5*ancho },
-		{ -0.5*largo ,0.5*alto ,-0.5*ancho },
-		{ -0.5*largo ,-0.5*alto,-0.5*ancho },
-	};
+	glPushMatrix(); //Camino6 lateral izquierdo
+	glTranslatef(-47, 0.0, -19);
+	glRotatef(90, 0, 1, 0);
+	//glScalef(40,0.1,7);
+	glScalef(45, 0.1, 7);
+	glDisable(GL_LIGHTING);
+	fig3.prisma2(text4.GLindex, 0);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
 
-	glBindTexture(GL_TEXTURE_2D, textura_1);
-	glRotatef(90, 1, 0, 0);
-	glBegin(GL_POLYGON);
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3fv(vertice[5]);
-	glTexCoord2f(.0f, 0.0f);	glVertex3fv(vertice[6]);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3fv(vertice[7]);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3fv(vertice[4]);
-	glEnd();
 
-	glBindTexture(GL_TEXTURE_2D, textura_2);
-	glBegin(GL_POLYGON);
-	
-	glTexCoord2f(0.0f, 0.0f);	glVertex3fv(vertice[0]);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3fv(vertice[4]);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3fv(vertice[5]);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3fv(vertice[1]);
-	glEnd();
+	glPushMatrix(); //Pasto
+	glTranslatef(0.0, 0.0, -4.0);
+	glScalef(87, 0.1, 1);
+	glDisable(GL_LIGHTING);
+	fig4.prisma2(text5.GLindex, 0);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
 
-	glBindTexture(GL_TEXTURE_2D, textura_2);
-	glBegin(GL_POLYGON);
+	glPushMatrix(); //Pasto
+	glTranslatef(0.0, 0.0, 4.0);
+	glScalef(87, 0.1, 1);
+	glDisable(GL_LIGHTING);
+	fig4.prisma2(text5.GLindex, 0);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
 
-	glTexCoord2f(0.0f, 0.0f);	glVertex3fv(vertice[3]);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3fv(vertice[7]);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3fv(vertice[6]);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3fv(vertice[2]);
-	glEnd();
 
-	glBindTexture(GL_TEXTURE_2D, textura_2);
-	glBegin(GL_POLYGON);
-	
-	glTexCoord2f(0.0f, 0.0f);		glVertex3fv(vertice[0]);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3fv(vertice[4]);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3fv(vertice[7]);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3fv(vertice[3]);
-	glEnd();
-
-	glBindTexture(GL_TEXTURE_2D, textura_2);
-	glBegin(GL_POLYGON);
-	
-	glTexCoord2f(0.0f, 0.0f);		glVertex3fv(vertice[1]);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3fv(vertice[5]);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3fv(vertice[6]);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3fv(vertice[2]);
-	glEnd();
-
-	glBindTexture(GL_TEXTURE_2D, textura_1);
-	glBegin(GL_POLYGON);
-	
-	glTexCoord2f(0.0f, 0.0f);	glVertex3fv(vertice[0]);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3fv(vertice[1]);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3fv(vertice[2]);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3fv(vertice[3]);
-	glEnd();
 
 }
 //mesa part
@@ -637,7 +593,7 @@ void Mesa() {
 					glDisable(GL_LIGHTING);
 					glEnable(GL_BLEND);
 					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-					cuboMesa(tex_mesa.GLindex);
+					cubo(tex_mesa.GLindex);
 					glDisable(GL_BLEND);
 					glEnable(GL_LIGHTING);
 				glPopMatrix();
@@ -670,88 +626,6 @@ void cilindro() {
 		glVertex3fv(vertice[1]);
 
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse13);
-		glVertex3fv(vertice[2]);
-		glVertex3fv(vertice[3]);
-		glEnd();
-	}
-}
-void torus(GLfloat radioM, GLfloat radiom, int meridianos, int paralelos)
-{
-
-	float R = 0;
-	float r = 0;
-
-	float v1[] = { 0.0, 0.0, 0.0 };
-	float v2[] = { 0.0, 0.0, 0.0 };
-	float v3[] = { 0.0, 0.0, 0.0 };
-	float v4[] = { 0.0, 0.0, 0.0 };
-
-	int i, j;
-
-	GLdouble angulop = 2 * 3.1415 / paralelos;
-	GLdouble angulom = 2 * 3.1415 / meridianos;
-
-	r = (radioM - radiom) / 2;
-	R = radiom + r;
-
-	for (i = 0; i<meridianos; i++)
-	{
-		for (j = 0; j<paralelos; j++)
-		{
-
-			v1[0] = R*cos(angulom*i) + r*cos(angulom*i)*cos(angulop*j);
-			v1[2] = R*sin(angulom*i) + r*sin(angulom*i)*cos(angulop*j);
-			v1[1] = r*sin(angulop*j);
-
-			glNormal3f(v1[0], v1[1], v1[2]);
-
-			v2[0] = R*cos(angulom*i) + r*cos(angulom*i)*cos(angulop*(j + 1));
-			v2[2] = R*sin(angulom*i) + r*sin(angulom*i)*cos(angulop*(j + 1));
-			v2[1] = r*sin(angulop*(j + 1));
-
-			glNormal3f(v2[0], v2[1], v2[2]);
-
-			v3[0] = R*cos(angulom*(i + 1)) + r*cos(angulom*(i + 1))*cos(angulop*(j + 1));
-			v3[2] = R*sin(angulom*(i + 1)) + r*sin(angulom*(i + 1))*cos(angulop*(j + 1));
-			v3[1] = r*sin(angulop*(j + 1));
-
-			glNormal3f(v3[0], v3[1], v3[2]);
-
-			v4[0] = R*cos(angulom*(i + 1)) + r*cos(angulom*(i + 1))*cos(angulop*j);
-			v4[2] = R*sin(angulom*(i + 1)) + r*sin(angulom*(i + 1))*cos(angulop*j);
-			v4[1] = r*sin(angulop*j);
-
-			glNormal3f(v4[0], v4[1], v4[2]);
-
-			glBegin(GL_POLYGON);
-			glVertex3fv(v1);
-			glVertex3fv(v2);
-			glVertex3fv(v3);
-			glVertex3fv(v4);
-			glEnd();
-		}
-	}
-}
-void cilindro(float rad, float h) {
-	float a, b, x, z;
-	float t = 360;
-	float ang = 360 / t;
-	for (float i = 0; i < t; i++)
-	{
-		x = rad*cos(i*ang);
-		z = rad*sin(i*ang);
-		a = rad*cos((i + 1)*ang);
-		b = rad*sin((i + 1)*ang);
-		GLfloat vertice[4][3] = {
-			{ x,0,z },
-			{ a,h,b },
-			{ x,h,z },
-			{ a,0,b },
-		};
-		glBegin(GL_POLYGON);
-		//glColor3f(0.275, 0.510, 0.706);
-		glVertex3fv(vertice[0]);
-		glVertex3fv(vertice[1]);
 		glVertex3fv(vertice[2]);
 		glVertex3fv(vertice[3]);
 		glEnd();
@@ -940,350 +814,119 @@ void Tablero()
 	
 	
 }
-void plano(GLuint textura1, float ancho, float alto, float largo) {
-
-	GLfloat vertice[4][3] = {
-		{ 0.5*ancho,0.0,-0.5*largo },
-		{ 0.5*ancho,0.0,0.5*largo },
-		{ -0.5*ancho,0.0,0.5*largo },
-		{ -0.5*ancho,0.0,-0.5*largo }
-	};
-
-	glBindTexture(GL_TEXTURE_2D, textura1);
-	//	glEnable(GL_DEPTH_TEST);//--------------------------CAMBIO
-
-	glBegin(GL_QUADS);
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.0f, 0.0f);	glVertex3fv(vertice[0]);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3fv(vertice[1]);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3fv(vertice[2]);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3fv(vertice[3]);
-	glEnd();
-
-
-
-}
-void barra_madera(float ancho, float largo, float alto, GLuint textura_1)
+void monito()
 {
-	GLfloat vertice[8][3] = {
-		{ 0 * largo ,0 * alto ,0 * ancho },
-		{ 1 * largo ,0 * alto ,0 * ancho },
-		{ 8 * largo ,15 * alto ,0 * ancho },
-		{ 9 * largo ,15 * alto ,0 * ancho },
-		{ 0 * largo ,0 * alto ,1 * ancho },
-		{ 1 * largo ,0 * alto ,1 * ancho },
-		{ 8 * largo ,15 * alto ,1 * ancho },
-		{ 9 * largo ,15 * alto ,1 * ancho },
-	};
+	//glNewList(1, GL_COMPILE);
+	glPushMatrix();//KNOGA
+	glRotated(90, 0, 1, 0);
+	glScalef(0.5, 0.5, 0.5);
+	fig7.prisma(2.0, 2.0, 1, text2.GLindex);
 
-	glBindTexture(GL_TEXTURE_2D, textura_1);   // choose the texture to use.
-	glBegin(GL_POLYGON);
-	//glColor3f(1.0f, 0.0f, 0.6f);
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.0f, 0.0f);	glVertex3fv(vertice[0]);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3fv(vertice[3]);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3fv(vertice[2]);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3fv(vertice[1]);
-	glEnd();
+	glPushMatrix();//Cuello
+	glTranslatef(0, 1.0, 0.0);
+	fig7.cilindro(0.25, 0.25, 15, 0);
+	glPushMatrix();//KOPF
+	glTranslatef(0, 1.0, 0);
+	fig7.esfera(0.75, 15, 15, 0);
+	glPopMatrix();
+	glPopMatrix();
 
-	glBindTexture(GL_TEXTURE_2D, textura_1);
-	glBegin(GL_POLYGON);
-	//glColor3f(0.0f, 1.0f, 1.0f);
-	glTexCoord2f(0.0f, 0.0f);	glVertex3fv(vertice[2]);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3fv(vertice[3]);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3fv(vertice[7]);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3fv(vertice[6]);
-	glEnd();
-
-	glBindTexture(GL_TEXTURE_2D, textura_1);
-	glBegin(GL_POLYGON);
-	//glColor3f(1.0f, 1.00f, 0.0f);
-	glTexCoord2f(0.0f, 0.0f);	glVertex3fv(vertice[0]);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3fv(vertice[4]);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3fv(vertice[7]);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3fv(vertice[3]);
-	glEnd();
-
-	glBindTexture(GL_TEXTURE_2D, textura_1);
-	glBegin(GL_POLYGON);
-	//glColor3f(0.5f, 1.0f, 0.0f);
-	glTexCoord2f(0.0f, 0.0f);		glVertex3fv(vertice[1]);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3fv(vertice[5]);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3fv(vertice[6]);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3fv(vertice[2]);
-	glEnd();
-	glBindTexture(GL_TEXTURE_2D, textura_1);
-	glBegin(GL_POLYGON);
-	//glColor3f(1.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.0f, 0.0f);	glVertex3fv(vertice[4]);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3fv(vertice[0]);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3fv(vertice[1]);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3fv(vertice[5]);
-	glEnd();
-
-	glBindTexture(GL_TEXTURE_2D, textura_1);
-	glBegin(GL_POLYGON);
-	//glColor3f(1.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.0f, 0.0f);		glVertex3fv(vertice[4]);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3fv(vertice[7]);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3fv(vertice[6]);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3fv(vertice[5]);
-	glEnd();
-
-}
-void cubo(float ancho, float largo, float alto, GLuint textura_1)
-{
-	GLfloat vertice[8][3] = {
-		{ 0.5*largo ,-0.5*alto ,0.5*ancho },
-		{ 0.5*largo ,0.5*alto ,0.5*ancho },
-		{ -0.5*largo ,0.5*alto ,0.5*ancho },
-		{ -0.5*largo ,-0.5*alto ,0.5*ancho },
-		{ 0.5*largo ,-0.5*alto ,-0.5*ancho },
-		{ 0.5*largo ,0.5*alto ,-0.5*ancho },
-		{ -0.5*largo ,0.5*alto ,-0.5*ancho },
-		{ -0.5*largo ,-0.5*alto,-0.5*ancho },
-	};
-
-	glBindTexture(GL_TEXTURE_2D, textura_1);   // choose the texture to use.
-	glBegin(GL_POLYGON);
-	//glColor3f(1.0f, 0.0f, 0.6f);
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.0f, 0.0f);	glVertex3fv(vertice[4]);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3fv(vertice[5]);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3fv(vertice[6]);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3fv(vertice[7]);
-	glEnd();
-
-	glBindTexture(GL_TEXTURE_2D, textura_1);
-	glBegin(GL_POLYGON);
-	//glColor3f(0.0f, 1.0f, 1.0f);
-	glTexCoord2f(0.0f, 0.0f);	glVertex3fv(vertice[0]);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3fv(vertice[4]);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3fv(vertice[5]);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3fv(vertice[1]);
-	glEnd();
-
-	glBindTexture(GL_TEXTURE_2D, textura_1);
-	glBegin(GL_POLYGON);
-	//glColor3f(1.0f, 1.00f, 0.0f);
-	glTexCoord2f(0.0f, 0.0f);	glVertex3fv(vertice[3]);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3fv(vertice[7]);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3fv(vertice[6]);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3fv(vertice[2]);
-	glEnd();
-
-	glBindTexture(GL_TEXTURE_2D, textura_1);
-	glBegin(GL_POLYGON);
-	//glColor3f(0.5f, 1.0f, 0.0f);
-	glTexCoord2f(0.0f, 0.0f);		glVertex3fv(vertice[0]);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3fv(vertice[4]);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3fv(vertice[7]);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3fv(vertice[3]);
-	glEnd();
-
-	glBindTexture(GL_TEXTURE_2D, textura_1);
-	glBegin(GL_POLYGON);
-	//glColor3f(1.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.0f, 0.0f);		glVertex3fv(vertice[1]);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3fv(vertice[5]);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3fv(vertice[6]);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3fv(vertice[2]);
-	glEnd();
-
-	glBindTexture(GL_TEXTURE_2D, textura_1);
-	glBegin(GL_POLYGON);
-	//glColor3f(1.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.0f, 0.0f);	glVertex3fv(vertice[0]);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3fv(vertice[1]);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3fv(vertice[2]);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3fv(vertice[3]);
-	glEnd();
-
-}
-void cubo1(float ancho, float largo, float alto)
-{
-	GLfloat vertice[8][3] = {
-		{ 0.5*ancho,-0.5*largo,0.5*alto },
-		{ 0.5*ancho,0.5*largo,0.5*alto },
-		{ -0.5*ancho,0.5*largo,0.5*alto },
-		{ -0.5*ancho,-0.5*largo,0.5*alto },
-		{ 0.5*ancho,-0.5*largo,-0.5*alto },
-		{ 0.5*ancho,0.5*largo,-0.5*alto },
-		{ -0.5*ancho,0.5*largo,-0.5*alto },
-		{ -0.5*ancho,-0.5*largo,-0.5*alto },
-
-	};
-
-	glBegin(GL_POLYGON);
-	//glColor3f(0.275, 0.510, 0.706);
-	glVertex3fv(vertice[4]);
-	glVertex3fv(vertice[5]);
-	glVertex3fv(vertice[6]);
-	glVertex3fv(vertice[7]);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	//glColor3f(0.482, 0.408, 0.933);
-	glVertex3fv(vertice[0]);
-	glVertex3fv(vertice[4]);
-	glVertex3fv(vertice[5]);
-	glVertex3fv(vertice[1]);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	//glColor3f(0.737, 0.5613, 0.561);
-	glVertex3fv(vertice[3]);
-	glVertex3fv(vertice[7]);
-	glVertex3fv(vertice[6]);
-	glVertex3fv(vertice[2]);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	//glColor3f(0.412, 0.412, 0.412);
-	glVertex3fv(vertice[0]);
-	glVertex3fv(vertice[4]);
-	glVertex3fv(vertice[7]);
-	glVertex3fv(vertice[3]);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	//glColor3f(0.184, 0.310, 0.310);
-	glVertex3fv(vertice[1]);
-	glVertex3fv(vertice[5]);
-	glVertex3fv(vertice[6]);
-	glVertex3fv(vertice[2]);
-	glEnd();
-
-	glBegin(GL_POLYGON);
-	//glColor3f(0.000, 0.502, 0.502);
-	glVertex3fv(vertice[0]);
-	glVertex3fv(vertice[1]);
-	glVertex3fv(vertice[2]);
-	glVertex3fv(vertice[3]);
-	glEnd();
-
-}
-void silla_1() {
+	glPushMatrix(); //RECHTS ARM
+	glTranslatef(1.25, 0.65, 0);
+	fig7.esfera(0.5, 12, 12, 0);
 	glPushMatrix();
-		glTranslatef(0, 0, -3);
-		glDisable(GL_LIGHTING);
-		barra_madera(0.3, 0.3, 0.3, t_silla1.GLindex);
-		glTranslatef(0, 0, -1.75);
-		barra_madera(0.3, 0.3, 0.3, t_silla1.GLindex);
-		glTranslatef(2.5, 0, 1.75);
-		glRotatef(180, 0, 1, 0);
-		glRotatef(20, 0, 0, 1);
-		barra_madera(0.2, 0.2, 0.2, t_silla1.GLindex);
-		glTranslatef(0, 0, 1.21);
-		barra_madera(0.2, 0.2, 0.2, t_silla1.GLindex);
+	glTranslatef(0.25, 0, 0);
+	glRotatef(movBrazoDer, 1.0, 0.0, 0.0);
+	glRotatef(-90, 0, 0, 1);
+	glTranslatef(0.75, 0, 0);
+	fig7.prisma(0.7, 1.5, 0.7, 0);
 	glPopMatrix();
-		glTranslatef(0.65, 1, -3.75);
-		cubo(1.5, 0.09, 0.09, t_silla1.GLindex);
-		glTranslatef(1.75, -0.2, 0);
-		cubo(1.3, 0.09, 0.09, t_silla1.GLindex);
-		glTranslatef(-0.15, 0.4, 0);
-		cubo(1.3, 0.09, 0.09, t_silla1.GLindex);
-		glTranslatef(-0.175, 1, 0);
-		cubo(1.3, 0.09, 0.09, t_silla1.GLindex);
-		glTranslatef(-0.8, 0, 0);
-		cubo(1.3, 0.09, 0.09, t_silla1.GLindex);
-		glTranslatef(0.1, 0.05, 0);
-		plano(t_asiento.GLindex, 2, 1000, 1.5);
-		glTranslatef(0, 2, 0.03);
-		glTranslatef(0.635, -0.5, 0);
-		glRotatef(60, 0, 0, 1);
-		plano(t_asiento.GLindex, 1.25, 1000, 1.45);
-		glEnable(GL_LIGHTING);
 	glPopMatrix();
-}
 
-void silla_2() {
+	glPushMatrix(); //LINKS ARM
+	glTranslatef(-1.25, 0.65, 0);
+	fig7.esfera(0.5, 12, 12, 0);
 	glPushMatrix();
-		glDisable(GL_LIGHTING);
-		cubo(1.5, 2, 0.2, t_estante.GLindex);
-		glTranslatef(0.85, -1.2, 0.6);
-		cubo(0.2, 0.2, 2.5, t_estante.GLindex);
-		glTranslatef(-1.75, 0, 0);
-		cubo(0.2, 0.2, 2.5, t_estante.GLindex);
-		glTranslatef(0, 0, -1.18);
-		cubo(0.2, 0.2, 2.5, t_estante.GLindex);
-		glTranslatef(1.75, 0, 0);
-		cubo(0.2, 0.2, 2.5, t_estante.GLindex);
-		glTranslatef(-0.85, 1.31, 0.55);
-		plano(t_asiento2.GLindex, 1.75, 2000, 1.25);
-		glTranslatef(1.15, 1.5, 0.03);
-		glRotatef(-10, 0, 0, 1);
-		cubo(1.45, 0.2, 3.25, t_asiento2.GLindex);
-		glEnable(GL_LIGHTING);
-		
+	glTranslatef(-0.25, 0, 0);
+	glRotatef(90, 0, 0, 1);
+	glRotatef(movBrazoIzq, 0.0, 1.0, 0.0);
+	
+	glTranslatef(-0.75, 0, 0);
+	fig7.prisma(0.7, 1.5, 0.7, 0);
 	glPopMatrix();
+	glPopMatrix();
+
+	glPushMatrix();//Cintura
+	glColor3f(0, 0, 1);
+	glTranslatef(0, -1.5, 0);
+	fig7.prisma(1, 2, 1, 0);
+
+	glPushMatrix(); //Pie Derecho -->
+	glTranslatef(0.75, -0.5, 0);
+	glRotatef(-15 + rotMusDer, 1, 0, 0);
+	glTranslatef(0, -0.5, 0);
+	fig7.prisma(1.0, 0.5, 1, 0);
+
+	glPushMatrix();
+	glTranslatef(0, -0.5, 0);
+	glRotatef(15 + rotRodDer, 1, 0, 0);
+	glTranslatef(0, -0.75, 0);
+	fig7.prisma(1.5, 0.5, 1, 0);
+
+	glPushMatrix();
+	glTranslatef(0, -0.75, 0.3);
+	fig7.prisma(0.2, 1.2, 1.5, 0);
+	glPopMatrix();
+	glPopMatrix();
+	glPopMatrix();
+
+
+	glPushMatrix(); //Pie Izquierdo -->
+	glTranslatef(-0.75, -0.5, 0);
+	glRotatef(-5 + rotMusIzq, 1, 0, 0);
+	glTranslatef(0, -0.5, 0);
+	fig7.prisma(1.0, 0.5, 1, 0);
+
+	glPushMatrix();
+	glTranslatef(0, -0.5, 0);
+	glRotatef(15 + rotRodIzq, 1, 0, 0);
+	glTranslatef(0, -0.75, 0);
+	fig7.prisma(1.5, 0.5, 1, 0);
+
+	glPushMatrix();
+	glTranslatef(0, -0.75, 0.3);
+	fig7.prisma(0.2, 1.2, 1.5, 0);
+	glPopMatrix();
+	glPopMatrix();
+	glPopMatrix();
+
+
+	glPopMatrix();
+
+	glColor3f(1, 1, 1);
+	glPopMatrix();
+	//glEndList();
 }
 
-void silla3() {
-	glPushMatrix();//respaldo
-	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_am_silla3);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_di_silla3);
-	//glMaterialfv(GL_FRONT, GL_SPECULAR, mat_espec_silla3);
-	//glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+GLuint createDL()
+{
+	GLuint ciudadDL;
+	//GLuint cieloDL;
 
-	glTranslated(0, 0, 3);
-	glPushMatrix();//asiento
-	glTranslated(0, -1.25, 0.75);
-	glPushMatrix();//cilidro
-	glTranslated(0, -2, 0);
-	cilindro(0.5, 2);
-	glPopMatrix();//fincilindro
-	glPushMatrix();//base
-	glColor3f(1, 0, 0);
-	glTranslated(0, -2, 0);
-	glScaled(0.5, 0.3, 0.5);
-	torus(2, 0.5, 50, 50);
-	glPopMatrix();//finbase
-	cubo1(2, 0.5, 2);
-	glPopMatrix();//finasiento
-	cubo1(2, 2, 0.5);
-	glPopMatrix();//finrespaldo
+	// Create the id for the list
+	ciudadDL = glGenLists(1);
+	// start list
+	glNewList(ciudadDL, GL_COMPILE);
+	// call the function that contains 
+	// the rendering commands
+	ciudad();
+	//monito();
+	// endList
+	glEndList();
+
+	return(ciudadDL);
 }
 
-void silla4() {
-	glPushMatrix();//respaldo
-	glTranslated(3, 0, 3);
-	glPushMatrix();//asiento
-	glTranslated(0, -1.25, 0.75);
-	glPushMatrix();//p1
-	glTranslated(-0.75, -2, 0.75);
-	cilindro(0.2, 2);
-	glPopMatrix();//finp1
-
-	glPushMatrix();//p2
-	glTranslated(0.85, -1.9, 0.75);
-	glRotated(90, 0, 0, 1);
-	cilindro(0.2, 1.7);
-	glPopMatrix();//finp2
-
-	glPushMatrix();//p3
-	glTranslated(0.75, -2, 0.75);
-	cilindro(0.2, 2);
-	glPopMatrix();//finp3
-
-	glPushMatrix();//p4
-	glTranslated(0.75, -1.9, -0.75);
-	glRotated(90, 0, 0, 1);
-	glRotated(90, 1, 0, 0);
-	cilindro(0.2, 1.5);
-	glPopMatrix();//finp4
-
-	glPushMatrix();//p5
-	glTranslated(-0.75, -1.9, -0.75);
-	glRotated(90, 0, 0, 1);
-	glRotated(90, 1, 0, 0);
-	cilindro(0.2, 1.5);
-	glPopMatrix();//finp5
-	cubo1(2, 0.5, 2);
-	glPopMatrix();//finasiento
-	cubo1(2, 2, 0.5);
-	glPopMatrix();//finrespaldo
-}
 void InitGL(GLvoid)     // Inicializamos parametros
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);				// Negro de fondo	
@@ -1292,15 +935,17 @@ void InitGL(GLvoid)     // Inicializamos parametros
 
 	glShadeModel(GL_SMOOTH);
 	//Para construir la figura comentar esto
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambiente);
 	glLightfv(GL_LIGHT1, GL_POSITION, Position);
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, Diffuse);
-	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, Position2);
+	//glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, Position2);
 	glEnable(GL_LIGHTING);
-	//glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT0);
 	//glEnable(GL_LIGHT1);
 
-	
+	//glEnable ( GL_COLOR_MATERIAL );
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
+	//glPolygonMode(GL_BACK, GL_LINE);
 
 	glClearDepth(1.0f);									// Configuramos Depth Buffer
 	glEnable(GL_DEPTH_TEST);							// Habilitamos Depth Testing
@@ -1310,11 +955,38 @@ void InitGL(GLvoid)     // Inicializamos parametros
 	glEnable(GL_AUTO_NORMAL);
 	glEnable(GL_NORMALIZE);
 
-	
+	/* setup blending */
+	//glBlendFunc(GL_SRC_ALPHA,GL_ONE);			// Set The Blending Function For Translucency
+	//glColor4f(1.0f, 1.0f, 1.0f, 0.5); 
 
 	text1.LoadBMP("01.bmp");
 	text1.BuildGLTexture();
 	text1.ReleaseImage();
+
+	text2.LoadBMP("logopumas.bmp");
+	//text2.LoadBMP("hulkcara.bmp");
+	text2.BuildGLTexture();
+	text2.ReleaseImage();
+
+	text3.LoadTGA("city/arrow.tga");
+	text3.BuildGLTexture();
+	text3.ReleaseImage();
+
+	text4.LoadTGA("city/pavimento.tga");
+	text4.BuildGLTexture();
+	text4.ReleaseImage();
+
+	text5.LoadTGA("city/pasto01.tga");
+	text5.BuildGLTexture();
+	text5.ReleaseImage();
+
+	text6.LoadTGA("city/casa01.tga");
+	text6.BuildGLTexture();
+	text6.ReleaseImage();
+
+	tree.LoadTGA("Tree.tga");
+	tree.BuildGLTexture();
+	tree.ReleaseImage();
 
 	tex_mesa.LoadTGA("Mesa/V_Tisch.tga");
 	tex_mesa.BuildGLTexture();
@@ -1327,121 +999,132 @@ void InitGL(GLvoid)     // Inicializamos parametros
 	tex_mesa2.LoadTGA("Mesa/V_Tisch2.tga");
 	tex_mesa2.BuildGLTexture();
 	tex_mesa2.ReleaseImage();
-	///------------------
-	t_octa.LoadTGA("octa.tga");
-	t_octa.BuildGLTexture();
-	t_octa.ReleaseImage();
 
-	t_dodeca.LoadTGA("dodeca.tga");
-	t_dodeca.BuildGLTexture();
-	t_dodeca.ReleaseImage();
+	mosaico.LoadTGA("mosaico.tga");
+	mosaico.BuildGLTexture();
+	mosaico.ReleaseImage();
 
-	t_piso.LoadTGA("piso.tga");
-	t_piso.BuildGLTexture();
-	t_piso.ReleaseImage();
+	agua.LoadTGA("agua.tga");
+	agua.BuildGLTexture();
+	kit._3dsLoad("kitt.3ds");
+	//kit.VertexNormals();
 
-	t_pared.LoadTGA("pared.tga");
-	t_pared.BuildGLTexture();
-	t_pared.ReleaseImage();
-
-	t_pared1.LoadTGA("pared1.tga");
-	t_pared1.BuildGLTexture();
-	t_pared1.ReleaseImage();
-
-	t_pared2.LoadTGA("pared2.tga");
-	t_pared2.BuildGLTexture();
-	t_pared2.ReleaseImage();
-
-	t_pared3.LoadTGA("pared3.tga");
-	t_pared3.BuildGLTexture();
-	t_pared3.ReleaseImage();
-
-	t_techo.LoadTGA("techo.tga");
-	t_techo.BuildGLTexture();
-	t_techo.ReleaseImage();
-
-	t_fachada.LoadTGA("fachada.tga");
-	t_fachada.BuildGLTexture();
-	t_fachada.ReleaseImage();
-
-	t_puerta.LoadTGA("puerta.tga");
-	t_puerta.BuildGLTexture();
-	t_puerta.ReleaseImage();
-
-	t_ventana.LoadTGA("ventana.tga");
-	t_ventana.BuildGLTexture();
-	t_ventana.ReleaseImage();
-
-	t_poster1.LoadTGA("poster1.tga");
-	t_poster1.BuildGLTexture();
-	t_poster1.ReleaseImage();
-
-	t_poster2.LoadTGA("poster2.tga");
-	t_poster2.BuildGLTexture();
-	t_poster2.ReleaseImage();
-
-	t_poster3.LoadTGA("poster3.tga");
-	t_poster3.BuildGLTexture();
-	t_poster3.ReleaseImage();
-
-	t_estante.LoadTGA("estante.tga");
-	t_estante.BuildGLTexture();
-	t_estante.ReleaseImage();
-
-	t_estante.LoadTGA("estante.tga");
-	t_estante.BuildGLTexture();
-	t_estante.ReleaseImage();
-
-
-	t_jenga1.LoadTGA("jenga1.tga");
-	t_jenga1.BuildGLTexture();
-	t_jenga1.ReleaseImage();
-
-	t_jenga2.LoadTGA("jenga2.tga");
-	t_jenga2.BuildGLTexture();
-	t_jenga2.ReleaseImage();
-
-	t_scrabble1.LoadTGA("scrabble1.tga");
-	t_scrabble1.BuildGLTexture();
-	t_scrabble1.ReleaseImage();
-
-	t_scrabble2.LoadTGA("scrabble2.tga");
-	t_scrabble2.BuildGLTexture();
-	t_scrabble2.ReleaseImage();
-
-	t_monopoly1.LoadTGA("monopoly1.tga");
-	t_monopoly1.BuildGLTexture();
-	t_monopoly1.ReleaseImage();
-
-	t_monopoly2.LoadTGA("monopoly2.tga");
-	t_monopoly2.BuildGLTexture();
-	t_monopoly2.ReleaseImage();
-
-	t_asiento.LoadTGA("asiento.tga");
-	t_asiento.BuildGLTexture();
-	t_asiento.ReleaseImage();
-
-	t_asiento2.LoadTGA("asiento2.tga");
-	t_asiento2.BuildGLTexture();
-	t_asiento2.ReleaseImage();
-
-	t_silla1.LoadTGA("silla.tga");
-	t_silla1.BuildGLTexture();
-	t_silla1.ReleaseImage();
-
-	t_silla2.LoadTGA("silla2.tga");
-	t_silla2.BuildGLTexture();
-	t_silla2.ReleaseImage();
-	//modelos
-	lampeHaup._3dsLoad("ra.3ds");
-	pez1._3dsLoad("A.3ds");
-	lampe1._3dsLoad("s.3ds");
-	
+	llanta._3dsLoad("k_rueda.3ds");
+	astro._3dsLoad("astronaut1.3ds");
+	orca._3dsLoad("ORCA.3ds");
 
 
 	objCamera.Position_Camera(0, 2.5f, 3, 0, 2.5f, 0, 0, 1, 0);
 
-	
+	//NEW Crear una lista de dibujo
+	ciudad_display_list = createDL();
+
+	//NEW Iniciar variables de KeyFrames
+	/*for(int i=0; i<MAX_FRAMES; i++)
+	{
+	KeyFrame[i].posX =0;
+	KeyFrame[i].posY =0;
+	KeyFrame[i].posZ =0;
+	KeyFrame[i].incX =0;
+	KeyFrame[i].incY =0;
+	KeyFrame[i].incZ =0;
+	KeyFrame[i].rotRodIzq =0;
+	KeyFrame[i].rotInc =0;
+	KeyFrame[i].giroMonito =0;
+	KeyFrame[i].giroMonitoInc =0;
+	KeyFrame[i].giroBrazo =0;
+	KeyFrame[i].giroBrazoInc = 0;
+	}*/
+	KeyFrame[0].posX = 37.000000;
+	KeyFrame[0].posY = 2.500000;
+	KeyFrame[0].posZ = -3.500000;
+	KeyFrame[0].giroMonito = 0.000000;
+	KeyFrame[0].movBrazoDer = 0.000000;
+	KeyFrame[0].movBrazoIzq = 0.000000;
+	KeyFrame[0].rotMusDer = 0.000000;
+	KeyFrame[0].rotRodDer = 0.000000;
+	KeyFrame[0].rotMusIzq = 0.000000;
+	KeyFrame[0].rotRodIzq = 0.000000;
+
+	KeyFrame[1].posX = 37.000000;
+	KeyFrame[1].posY = 2.500000;
+	KeyFrame[1].posZ = -3.500000;
+	KeyFrame[1].giroMonito = 0.000000;
+	KeyFrame[1].movBrazoDer = -86.000000;
+	KeyFrame[1].movBrazoIzq = -79.000000;
+	KeyFrame[1].rotMusDer = 66.000000;
+	KeyFrame[1].rotRodDer = 55.000000;
+	KeyFrame[1].rotMusIzq = -105.000000;
+	KeyFrame[1].rotRodIzq = 86.000000;
+
+	KeyFrame[2].posX = 43.000000;
+	KeyFrame[2].posY = 2.500000;
+	KeyFrame[2].posZ = -3.500000;
+	KeyFrame[2].giroMonito = 37.000000;
+	KeyFrame[2].movBrazoDer = 78.000000;
+	KeyFrame[2].movBrazoIzq = 59.000000;
+	KeyFrame[2].rotMusDer = -1.000000;
+	KeyFrame[2].rotRodDer = -22.000000;
+	KeyFrame[2].rotMusIzq = 50.000000;
+	KeyFrame[2].rotRodIzq = 96.000000;
+
+	KeyFrame[3].posX = 44.000000;
+	KeyFrame[3].posY = 2.500000;
+	KeyFrame[3].posZ = -3.500000;
+	KeyFrame[3].giroMonito = 86.000000;
+	KeyFrame[3].movBrazoDer = 50.000000;
+	KeyFrame[3].movBrazoIzq = 63.000000;
+	KeyFrame[3].rotMusDer = -13.000000;
+	KeyFrame[3].rotRodDer = 7.000000;
+	KeyFrame[3].rotMusIzq = 19.000000;
+	KeyFrame[3].rotRodIzq = 72.000000;
+
+	KeyFrame[4].posX = 44.000000;
+	KeyFrame[4].posY = 2.500000;
+	KeyFrame[4].posZ = -18.500000;
+	KeyFrame[4].giroMonito = 86.000000;
+	KeyFrame[4].movBrazoDer = -83.000000;
+	KeyFrame[4].movBrazoIzq = -73.000000;
+	KeyFrame[4].rotMusDer = 91.000000;
+	KeyFrame[4].rotRodDer = 53.000000;
+	KeyFrame[4].rotMusIzq = -100.000000;
+	KeyFrame[4].rotRodIzq = 107.000000;
+
+	KeyFrame[5].posX = 44.000000;
+	KeyFrame[5].posY = 2.500000;
+	KeyFrame[5].posZ = -34.500000;
+	KeyFrame[5].giroMonito = 117.000000;
+	KeyFrame[5].movBrazoDer = 12.000000;
+	KeyFrame[5].movBrazoIzq = 11.000000;
+	KeyFrame[5].rotMusDer = 1.000000;
+	KeyFrame[5].rotRodDer = 5.000000;
+	KeyFrame[5].rotMusIzq = -17.000000;
+	KeyFrame[5].rotRodIzq = 92.000000;
+
+	KeyFrame[6].posX = 42.000000;
+	KeyFrame[6].posY = 2.500000;
+	KeyFrame[6].posZ = -35.500000;
+	KeyFrame[6].giroMonito = 166.000000;
+	KeyFrame[6].movBrazoDer = 67.000000;
+	KeyFrame[6].movBrazoIzq = 83.000000;
+	KeyFrame[6].rotMusDer = -110.000000;
+	KeyFrame[6].rotRodDer = 96.000000;
+	KeyFrame[6].rotMusIzq = 47.000000;
+	KeyFrame[6].rotRodIzq = 109.000000;
+
+	//NEW//////////////////NEW//////////////////NEW//////////////////
+}
+
+void pintaTexto(float x, float y, float z, void *font, char *string)
+{
+
+	char *c;     //Almacena los caracteres a escribir
+	glRasterPos3f(x, y, z);	//Posicion apartir del centro de la ventana
+							//glWindowPos2i(150,100);
+	for (c = string; *c != '\0'; c++) //Condicion de fin de cadena
+	{
+		glutBitmapCharacter(font, *c); //imprime
+	}
 }
 
 void display(void)   // Creamos la funcion donde se dibuja
@@ -1453,165 +1136,223 @@ void display(void)   // Creamos la funcion donde se dibuja
 
 	glPushMatrix();
 
-		glRotatef(g_lookupdown, 1.0f, 0, 0);
+	glRotatef(g_lookupdown, 1.0f, 0, 0);
 
-		gluLookAt(objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z,
-			objCamera.mView.x, objCamera.mView.y, objCamera.mView.z,
-			objCamera.mUp.x, objCamera.mUp.y, objCamera.mUp.z);
-
-
-		glPushMatrix();
-			glPushMatrix(); //Creamos cielo
-				glDisable(GL_LIGHTING);
-				glTranslatef(0, 12.5, 0);
-				fig1.skybox(t_pared1.GLindex, t_pared.GLindex, t_pared2.GLindex, t_pared3.GLindex, t_piso.GLindex,t_techo.GLindex);
-				glEnable(GL_LIGHTING);
-
-				//lampara 1
-				glPushMatrix();
-				glTranslated(-20.1, 8.5, 21);
-				glScaled(0.1, 0.1, 0.1);
-				lampe1.GLrender(NULL, _SHADED, 1.0);
-				glPopMatrix();
-
-				//lampe2
-				glPushMatrix();
-				glTranslated(0, 12.5, 0);
-				glScaled(0.02, 0.02, 0.02);
-				lampeHaup.GLrender(NULL, _SHADED, 1.0);
-				glPopMatrix();
-
-			glPopMatrix();
-			//foco
-			glPushMatrix();
-			glTranslatef(0, 18, 0);
-			glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuseLampara);
-			glScaled(1.6, 1.6, 1.6);
-			esfera();
-			glPopMatrix();
-		//objetos
-		glPushMatrix();
-
-			glScaled(3, 3, 3);
-			glTranslated(-22, -1, -5);
-			glPushMatrix();
-				glRotatef(180, 1, 0, 0);
-				glScalef(3, 3, 3);
-				glTranslatef(5.374, -2.31, -2);
-				glDisable(GL_LIGHTING);
-				juego_mesa(0.5, 0.25, 0.125, t_jenga1.GLindex, t_jenga2.GLindex);
-				glEnable(GL_LIGHTING);
-			glPopMatrix();
-
-			glPushMatrix();
-				glRotatef(180, 1, 0, 0);
-				glScalef(3, 3, 3);
-				glTranslatef(5.374, -2.31, -2);
-				glRotatef(180, 0, 0, 1);
-				glRotatef(270, 1, 0, 0);
-				glTranslatef(0.025, 0.4, -0.18);
-				glDisable(GL_LIGHTING);
-				juego_mesa(0.5, 0.3, 0.15, t_scrabble1.GLindex, t_scrabble2.GLindex);
-				glEnable(GL_LIGHTING);
-			glPopMatrix();
-
-			glPushMatrix();
-				glRotatef(180, 1, 0, 0);
-				glScalef(3, 3, 3);
-				glTranslatef(5.374, -2.31, -2);
-				glRotatef(180, 0, 0, 1);
-				glRotatef(270, 1, 0, 0);
-				glTranslatef(0.025, -0.4, -0.21);
-				glDisable(GL_LIGHTING);
-				juego_mesa(0.5, 0.3, 0.1, t_monopoly1.GLindex, t_monopoly2.GLindex);
-				glEnable(GL_LIGHTING);
-			glPopMatrix();
-
-		glPopMatrix();//fin_objetos
+	gluLookAt(objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z,
+		objCamera.mView.x, objCamera.mView.y, objCamera.mView.z,
+		objCamera.mUp.x, objCamera.mUp.y, objCamera.mUp.z);
 
 
-		//dado
-		glPushMatrix();
-			glScaled(.1, .1, .1);
-			glTranslated(25, 93, -10);
-			glRotated(rota, 0, 1, 0);
-			glDisable(GL_LIGHTING);
-			dodecaedro(t_dodeca.GLindex);
-			glEnable(GL_LIGHTING);
+	glPushMatrix();
+		glPushMatrix(); //Creamos cielo
+		glDisable(GL_LIGHTING);
+		glTranslatef(0, 60, 0);
+		fig1.skybox(130.0, 130.0, 130.0, text1.GLindex);
+		glEnable(GL_LIGHTING);
 		glPopMatrix();
+
+		glPushMatrix();
+		glEnable(GL_COLOR_MATERIAL);
+		glColor3f(1, 1, 1);
+		//glScalef(0.5, 0.5, 0.5);
+		//monito();
+		glCallList(ciudad_display_list);
+		glTranslatef(posX, posY, posZ);
+		glRotatef(giroMonito, 0, 1, 0);
+		monito();
+		glDisable(GL_COLOR_MATERIAL);
+		glPopMatrix();
+
 		
 
-		//mesa
-		glPushMatrix();
-			glScaled(2, 2, 2);
-			glTranslated(0, 4.5, 0);
-			Mesa();
-			glTranslated(0, 0.2, 0);
-			glRotated(90, -1, 0, 0);
-			glScaled(0.16, 0.16, 0.2);
-			Tablero();
+	glPushMatrix();
+		glRotatef(90, 0, 1, 0);
+		glScalef(0.3, 0.3, 0.3);
+
+		glTranslatef(movKitX, 4, movKitZ);
+		glRotatef(rotKit, 0, 1, 0);
+
+		kit.GLrender(NULL, _SHADED, 1.0); //Dibujamos la carroceria
+										  //llanta.GLrender(NULL,_SHADED,1.0);
+
+									  //Colocar aquí las llantas
+		glPushMatrix(); //llanta frontal der
+		glTranslatef(-6, -1, 7.5);
+		glRotatef(-rotTires, 1, 0, 0);
+		llanta.GLrender(NULL, _SHADED, 1.0);
 		glPopMatrix();
 
-		//sillas
-		glPushMatrix();
-			
-			glPushMatrix();//push_silla1_silla2
-				glScalef(2.5, 2.5, 2.5);
-				glTranslatef(2, 0.2, -1);
-				glRotated(90, 0, 1, 0);
-				silla_1(); //Silla
-				glScalef(2.5, 2.5, 2.5);
-				glTranslatef(1.3, 2.5, -2);
-				glRotated(90, 0, 1, 0);
-				silla_2(); //Silla 2
-			glPopMatrix();//fin_pop_silla1_silla_"
+		glPushMatrix(); //llanta frontal izq
+		glTranslatef(6, -1, 7.5);
+		glRotatef(180, 0, 1, 0);
+		glRotatef(rotTires, 1, 0, 0);
+		llanta.GLrender(NULL, _SHADED, 1.0);
+		glPopMatrix();
 
-			glPushMatrix();
-				glScaled(3, 3, 3);
-				glTranslated(-5.5, 0, 9);
-				glRotated(90, 0, 1, 0);
-				glPushMatrix();//push_silla3
-					glScalef(0.85, 0.85, 0.85);
-					glTranslatef(4.7, 3.5, 8.5);
-					glRotated(90, 0, 1, 0);
-					silla3(); //silla3
-				glPopMatrix();//popsilla_3
+		glPushMatrix(); //llanta trasera der
+		glTranslatef(-6, -1, -9.5);
+		glRotatef(-rotTires, 1, 0, 0);
+		llanta.GLrender(NULL, _SHADED, 1.0);
+		glPopMatrix();
 
-				glPushMatrix();
-					glScalef(0.85, 0.85, 0.85);
-					glTranslatef(4.7, 3.5, 7.5);
-					glRotated(90, 0, 1, 0);
-					silla4();//silla4
-				glPopMatrix();
-				glPopMatrix();
-			glPopMatrix();
-			//pez
-			glPushMatrix();
-			glTranslated(2, 3, -4);
-			glScaled(54, 54, 54);
-			pez1.GLrender(NULL, _SHADED, 1.0);
-			glPopMatrix();
-			glPopMatrix();
-	glColor3f(1,1,1);
+		glPushMatrix(); //llanta trasera izq
+		glTranslatef(6, -1, -9.5);
+		glRotatef(180, 0, 1, 0);
+		glRotatef(rotTires, 1, 0, 0);
+		llanta.GLrender(NULL, _SHADED, 1.0);
+		glPopMatrix();
 
 	glPopMatrix();
 
-	
+
+	//
+	//orca
+	glPushMatrix();
+	glTranslatef(0.0, -1.0, 9.5);
+	glTranslatef(pos_pez, 0.0f, 0.0f);
+	glRotatef(90 + rota, 0.0, 1.0, 0.0);
+	orca.GLrender(NULL, _SHADED, 1.0);  //_WIRED O _POINTS
+	glPopMatrix();
+
+
+	glPushMatrix();
+	glTranslatef(0.0, -1.0, -9.5);
+	glTranslatef(pos_pez, 0.0f, 0.0f);
+	glRotatef(90 + rota, 0.0, 1.0, 0.0);
+	orca.GLrender(NULL, _SHADED, 1.0);  //_WIRED O _POINTS
+	glPopMatrix();
+
+	glPushMatrix(); //pecera/alberca
+	glTranslatef(0.0, -2.5, 0);
+	glScalef(131, 5.0, 117.5);
+	glDisable(GL_LIGHTING);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	prisma2(agua.GLindex, mosaico.GLindex);
+	glDisable(GL_BLEND);
+	glEnable(GL_LIGHTING);
+	glPopMatrix();
+	//mesa
+	glPushMatrix();
+	glTranslated(1,2,6);
+	glScaled(1,1,1);
+	Mesa();
+	glPopMatrix();
+	//astronauta 
+	glPushMatrix();
+	glTranslated(0, 4, -8);
+	glScalef(0.03, 0.03, 0.03);
+	glTranslated(0, pos_pez, pos_pez + 0.4);
+	astro.GLrender(NULL, _SHADED, 1.0);  //_WIRED O _POINTS
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslated(1, 2.4, 6);
+	glRotated(90, -1, 0, 0);
+	glScaled(0.16, 0.16, 0.2);
+	Tablero();
+	glPopMatrix();
+
+	glColor3f(1.0, 1.0, 1.0);
+
+	glPopMatrix();
+
+	glPopMatrix();
 
 	glutSwapBuffers();
 
 }
 
-void mov_dado() {
-	rota += 5;
-	glutPostRedisplay();
-}
 void animacion()
 {
-	
+	pez_der += 0.001;//agua mueves textura
+	pez_izq += 0.001;//agua 
+					 //pos_pez mueve el plano del pez
+	pos_pez += 0.01;
+	if (pos_pez >= 45)
+		rota = -180.0;
+	if (pos_pez <= -45)
+		rota = 0.0;
+	if (rota == -180.0)
+		pos_pez -= 0.05;
+	if (rota == 0.0)
+		pos_pez += 0.05;
 
 
-	
+	//Movimiento del coche
+	if (g_fanimacion)
+	{
+		if (g_avanza)
+		{
+			movKitZ += 1.0;
+			rotTires -= 10;
+			if (movKitZ>130)
+				g_avanza = false;
+		}
+		else
+		{
+
+			movKitZ -= 1.0;
+			rotTires += 10;
+			if (movKitZ<0)
+				g_avanza = true;
+		}
+	}
+
+	if (circuito)
+	{
+		if (recorrido1)
+		{
+			movKitZ++;
+			if (movKitZ>155)
+			{
+				recorrido1 = false;
+				recorrido2 = true;
+			}
+		}
+		if (recorrido2)
+		{
+			rotKit = 90;
+			movKitX++;
+			if (movKitX > 125)
+			{
+				recorrido2 = false;
+				recorrido3 = true;
+
+			}
+		}
+		if (recorrido3)
+		{
+			rotKit = 180;
+			movKitZ--;
+			if (movKitZ<-155)
+			{
+				recorrido3 = false;
+				recorrido4 = true;
+			}
+		}
+		if (recorrido4)
+		{
+			rotKit = 270;
+			movKitX--;
+			if (movKitX<0)
+			{
+				recorrido4 = false;
+				recorrido5 = true;
+			}
+		}
+		if (recorrido5)
+		{
+			rotKit = 0;
+			movKitZ++;
+			if (movKitZ>0)
+			{
+				recorrido5 = false;
+				recorrido1 = true;
+			}
+		}
+	}
+
 
 	//Movimiento del monito
 	if (play)
@@ -1724,14 +1465,14 @@ void keyboard(unsigned char key, int x, int y)  // Create Keyboard Function
 
 	case 'O':		//  
 	case 'o':
-		//g_fanimacion ^= true; //Activamos/desactivamos la animacíon
-		//circuito = false;
+		g_fanimacion ^= true; //Activamos/desactivamos la animacíon
+		circuito = false;
 		break;
 
 	case 'i':		//  
 	case 'I':
-		//circuito ^= true; //Activamos/desactivamos la animacíon
-		//g_fanimacion = false;
+		circuito ^= true; //Activamos/desactivamos la animacíon
+		g_fanimacion = false;
 		break;
 
 	case 'k':		//
@@ -1961,7 +1702,6 @@ int main(int argc, char** argv)   // Main Function
 	glutKeyboardFunc(keyboard);	//Indicamos a Glut función de manejo de teclado
 	glutSpecialFunc(arrow_keys);	//Otras
 	glutIdleFunc(animacion);
-	glutIdleFunc(mov_dado);
 	glutMainLoop();          // 
 
 	return 0;
