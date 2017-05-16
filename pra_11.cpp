@@ -87,7 +87,7 @@ int font = (int)GLUT_BITMAP_HELVETICA_18;
 //GLfloat Diffuse[]= { 1.0f, 1.0f, 1.0f, 1.0f };				// Diffuse Light Values
 GLfloat Diffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f };				// Diffuse Light Values
 GLfloat Specular[] = { 1.0, 1.0, 1.0, 1.0 };				// Specular Light Values
-GLfloat Position[] = { 0.0f, 7.0f, -5.0f, 0.0f };			// Light Position
+GLfloat Position[] = { 0.0f, 18.0f, 0.0f, 0.0f };			// Light Position
 GLfloat Position2[] = { 0.0f, 0.0f, -5.0f, 1.0f };			// Light Position
 
 GLfloat m_dif1[] = { 0.0f, 0.2f, 1.0f, 1.0f };				// Diffuse Light Values
@@ -110,7 +110,8 @@ GLfloat mat_diffuse4[] = { 1.0, 1.0, 0.0, 1.0 }; //canica  gelb
 GLfloat mat_diffuse5[] = { 0.4, 0.0, 0.4, 1.0 }; //canica  violeta
 GLfloat mat_diffuse6[] = { 1.0, 0.2, 0.0, 1.0 }; //canica  orange
 GLfloat mat_diffuse7[] = { 0.0, 0.4, 0.0, 1.0 }; //canica  grun  2
-
+GLfloat mat_diffuseLampara[] = { 0.4, 0.1, 0.0, 1.0 }; //luz lampara haup
+GLfloat ambiente[] = { 1.0,1.0,1,0 ,1.0};
 
 GLfloat mat_am_silla3[] = { 0.0215,0.1745,	0.0215 };
 GLfloat mat_di_silla3[] = { 0.0215,	0.1745,	0.0215 };
@@ -118,6 +119,10 @@ GLfloat mat_espec_silla3[] = { 0.0215,	0.1745,	0.0215 };
 GLfloat mat_shininess[] = { 0.6 };
 CFiguras fig1;
 
+CModel pez1;
+CModel lampe1;
+CModel robot;
+CModel lampeHaup;
 
 CTexture text1;
 CTexture text2;
@@ -132,6 +137,7 @@ CTexture t_dodeca;
 CTexture t_octa;
 
 CTexture t_piso;
+CTexture t_pared1;
 CTexture t_pared;
 CTexture t_pared2;
 CTexture t_pared3;
@@ -1286,12 +1292,13 @@ void InitGL(GLvoid)     // Inicializamos parametros
 
 	glShadeModel(GL_SMOOTH);
 	//Para construir la figura comentar esto
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambiente);
 	glLightfv(GL_LIGHT1, GL_POSITION, Position);
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, Diffuse);
 	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, Position2);
 	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	glEnable(GL_LIGHT1);
+	//glEnable(GL_LIGHT0);
+	//glEnable(GL_LIGHT1);
 
 	
 
@@ -1336,6 +1343,10 @@ void InitGL(GLvoid)     // Inicializamos parametros
 	t_pared.LoadTGA("pared.tga");
 	t_pared.BuildGLTexture();
 	t_pared.ReleaseImage();
+
+	t_pared1.LoadTGA("pared1.tga");
+	t_pared1.BuildGLTexture();
+	t_pared1.ReleaseImage();
 
 	t_pared2.LoadTGA("pared2.tga");
 	t_pared2.BuildGLTexture();
@@ -1421,6 +1432,12 @@ void InitGL(GLvoid)     // Inicializamos parametros
 	t_silla2.LoadTGA("silla2.tga");
 	t_silla2.BuildGLTexture();
 	t_silla2.ReleaseImage();
+	//modelos
+	lampeHaup._3dsLoad("ra.3ds");
+	pez1._3dsLoad("A.3ds");
+	lampe1._3dsLoad("s.3ds");
+	
+
 
 	objCamera.Position_Camera(0, 2.5f, 3, 0, 2.5f, 0, 0, 1, 0);
 
@@ -1447,12 +1464,36 @@ void display(void)   // Creamos la funcion donde se dibuja
 			glPushMatrix(); //Creamos cielo
 				glDisable(GL_LIGHTING);
 				glTranslatef(0, 12.5, 0);
-				fig1.skybox( text1.GLindex, t_pared.GLindex, t_pared2.GLindex, t_pared3.GLindex, text1.GLindex, text1.GLindex);
+				fig1.skybox(t_pared1.GLindex, t_pared.GLindex, t_pared2.GLindex, t_pared3.GLindex, t_piso.GLindex,t_techo.GLindex);
 				glEnable(GL_LIGHTING);
-			glPopMatrix();
 
+				//lampara 1
+				glPushMatrix();
+				glTranslated(-20.1, 8.5, 21);
+				glScaled(0.1, 0.1, 0.1);
+				lampe1.GLrender(NULL, _SHADED, 1.0);
+				glPopMatrix();
+
+				//lampe2
+				glPushMatrix();
+				glTranslated(0, 12.5, 0);
+				glScaled(0.02, 0.02, 0.02);
+				lampeHaup.GLrender(NULL, _SHADED, 1.0);
+				glPopMatrix();
+
+			glPopMatrix();
+			//foco
+			glPushMatrix();
+			glTranslatef(0, 18, 0);
+			glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuseLampara);
+			glScaled(1.6, 1.6, 1.6);
+			esfera();
+			glPopMatrix();
 		//objetos
 		glPushMatrix();
+
+			glScaled(3, 3, 3);
+			glTranslated(-22, -1, -5);
 			glPushMatrix();
 				glRotatef(180, 1, 0, 0);
 				glScalef(3, 3, 3);
@@ -1492,17 +1533,18 @@ void display(void)   // Creamos la funcion donde se dibuja
 		//dado
 		glPushMatrix();
 			glScaled(.1, .1, .1);
-			glTranslated(150, 15, 15);
+			glTranslated(25, 93, -10);
 			glRotated(rota, 0, 1, 0);
 			glDisable(GL_LIGHTING);
 			dodecaedro(t_dodeca.GLindex);
 			glEnable(GL_LIGHTING);
 		glPopMatrix();
-	
+		
+
 		//mesa
 		glPushMatrix();
-			glTranslated(1, 4.3, 6);
-			glScaled(1, 1, 1);
+			glScaled(2, 2, 2);
+			glTranslated(0, 4.5, 0);
 			Mesa();
 			glTranslated(0, 0.2, 0);
 			glRotated(90, -1, 0, 0);
@@ -1512,42 +1554,58 @@ void display(void)   // Creamos la funcion donde se dibuja
 
 		//sillas
 		glPushMatrix();
-			glTranslated(1, 1, -5);
+			
 			glPushMatrix();//push_silla1_silla2
-				glScalef(0.75, 0.75, 0.75);
-				glTranslatef(15, -1.25, 20);
+				glScalef(2.5, 2.5, 2.5);
+				glTranslatef(2, 0.2, -1);
+				glRotated(90, 0, 1, 0);
 				silla_1(); //Silla
-				glScalef(0.65, 0.65, 0.65);
-				glTranslatef(19, 0.92, 15);
+				glScalef(2.5, 2.5, 2.5);
+				glTranslatef(1.3, 2.5, -2);
+				glRotated(90, 0, 1, 0);
 				silla_2(); //Silla 2
 			glPopMatrix();//fin_pop_silla1_silla_"
 
-			glPushMatrix();//push_silla3
-				glScalef(0.85, 0.85, 0.85);
-				glTranslatef(5, 3.5, 8.5);
-				glRotated(90, 0, 1, 0);
-				silla3(); //silla3
-			glPopMatrix();//popsilla_3
-
 			glPushMatrix();
-				glScalef(0.85, 0.85, 0.85);
-				glTranslatef(5, 3.5, 7.5);
+				glScaled(3, 3, 3);
+				glTranslated(-5.5, 0, 9);
 				glRotated(90, 0, 1, 0);
-				silla4();//silla4
-			glPopMatrix();
+				glPushMatrix();//push_silla3
+					glScalef(0.85, 0.85, 0.85);
+					glTranslatef(4.7, 3.5, 8.5);
+					glRotated(90, 0, 1, 0);
+					silla3(); //silla3
+				glPopMatrix();//popsilla_3
 
+				glPushMatrix();
+					glScalef(0.85, 0.85, 0.85);
+					glTranslatef(4.7, 3.5, 7.5);
+					glRotated(90, 0, 1, 0);
+					silla4();//silla4
+				glPopMatrix();
+				glPopMatrix();
 			glPopMatrix();
-		
+			//pez
+			glPushMatrix();
+			glTranslated(2, 3, -4);
+			glScaled(54, 54, 54);
+			pez1.GLrender(NULL, _SHADED, 1.0);
+			glPopMatrix();
+			glPopMatrix();
 	glColor3f(1,1,1);
 
 	glPopMatrix();
 
-	glPopMatrix();
+	
 
 	glutSwapBuffers();
 
 }
 
+void mov_dado() {
+	rota += 5;
+	glutPostRedisplay();
+}
 void animacion()
 {
 	
@@ -1903,6 +1961,7 @@ int main(int argc, char** argv)   // Main Function
 	glutKeyboardFunc(keyboard);	//Indicamos a Glut función de manejo de teclado
 	glutSpecialFunc(arrow_keys);	//Otras
 	glutIdleFunc(animacion);
+	glutIdleFunc(mov_dado);
 	glutMainLoop();          // 
 
 	return 0;
